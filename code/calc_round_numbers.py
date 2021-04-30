@@ -1,6 +1,6 @@
 from math import *
 import sys
-import Crypto.Util.number
+#import Crypto.Util.number
 
 def sat_inequiv_alpha(p, t, R_F, R_P, alpha, M):
     n = ceil(log(p, 2))
@@ -83,25 +83,66 @@ def calc_final_numbers_fixed(p, t, alpha, M, security_margin):
     return ret_list # [R_F, R_P, min_sbox_cost, min_size_cost]
 
 def print_latex_table_combinations(combinations, alpha, security_margin):
+    field_string = "\mathbb F_{p}"
+    sbox_string = "x^{" + str(alpha) + "}"
+    print("$ " + "M" + "$ & $" + "N" + "$ & $" + "n" + "$ & $" + "t" + "$ & $" + "R_F" + "$ & $" + "R_P" + "$ & $" + field_string + "$ & $" + "min_sbox_cost" + "$ & $" + "min_size_cost" + "$ \\\\")
     for comb in combinations:
         N = comb[0]
         t = comb[1]
         M = comb[2]
         n = int(N / t)
-        prime = Crypto.Util.number.getPrime(n)
+        #prime = Crypto.Util.number.getPrime(n)
+        prime = 8444461749428370424248824938781546531375899335154063827935233455917409239041
         ret = calc_final_numbers_fixed(prime, t, alpha, M, security_margin)
         field_string = "\mathbb F_{p}"
         sbox_string = "x^{" + str(alpha) + "}"
-        print("$" + str(M) + "$ & $" + str(N) + "$ & $" + str(n) + "$ & $" + str(t) + "$ & $" + str(ret[0]) + "$ & $" + str(ret[1]) + "$ & $" + field_string + "$ & $" + str(ret[2]) + "$ & $" + str(ret[3]) + "$ \\\\")
+        print("$ " + str(M) + "$ & $" + str(N) + "$ & $" + str(n) + "$ & $" + str(t) + "$ & $" + str(ret[0]) + "$ & $" + str(ret[1]) + "$ & $" + field_string + "$ & $" + str(ret[2]) + "$ & $" + str(ret[3]) + "$ \\\\")
 
 # Single tests
 # print calc_final_numbers_fixed(Crypto.Util.number.getPrime(64), 24, 3, 128, True)
 # print calc_final_numbers_fixed(Crypto.Util.number.getPrime(253), 6, -1, 128, True)
-print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(255), 3, 5, 128, True))
-print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(255), 6, 5, 128, True))
-print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(254), 3, 5, 128, True))
-print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(254), 6, 5, 128, True))
-print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(64), 24, 3, 128, True))
+#print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(255), 3, 5, 128, True))
+#print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(255), 6, 5, 128, True))
+#print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(254), 3, 5, 128, True))
+#print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(254), 6, 5, 128, True))
+#print(calc_final_numbers_fixed(Crypto.Util.number.getPrime(64), 24, 3, 128, True))
+
+prime = 8444461749428370424248824938781546531375899335154063827935233455917409239041
+print("[R_F, R_P, min_sbox_cost, min_size_cost] for alpha = 11, t = 3")
+print(calc_final_numbers_fixed(prime, 3, 11, 128, True))
+print("[R_F, R_P, min_sbox_cost, min_size_cost] for alpha = 17, t = 3")
+print(calc_final_numbers_fixed(prime, 3, 17, 128, True))
+
+exit(0)
+
+x_11_combinations = [
+    [1536, 2, 128], [1536, 3, 128], [1536, 4, 128], [1536, 5, 128],
+    [1536, 6, 128], [1536, 8, 128], [1536, 16, 128],
+    [1536, 2, 256], [1536, 4, 256], [1536, 6, 256], [1536, 8, 256], [1536, 16, 256]
+]
+
+# With security margin
+print("--- Table x^11 WITH security margin ---")
+print_latex_table_combinations(x_11_combinations, 11, True)
+
+# Without security margin
+print("--- Table x^11 WITHOUT security margin ---")
+print_latex_table_combinations(x_11_combinations, 11, False)
+
+x_17_combinations = [
+    [1536, 2, 128], [1536, 3, 128], [1536, 4, 128], [1536, 5, 128],
+    [1536, 6, 128], [1536, 8, 128], [1536, 16, 128],
+    [1536, 2, 256], [1536, 4, 256], [1536, 6, 256], [1536, 8, 256], [1536, 16, 256]
+]
+
+# With security margin
+print("--- Table x^17 WITH security margin ---")
+print_latex_table_combinations(x_17_combinations, 17, True)
+
+# Without security margin
+print("--- Table x^17 WITHOUT security margin ---")
+print_latex_table_combinations(x_17_combinations, 17, False)
+
 
 # x^5 (254-bit prime number)
 #prime = 0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001
@@ -124,12 +165,12 @@ x_3_combinations = [
 ]
 
 # With security margin
-print("--- Table x^3 WITH security margin ---")
-print_latex_table_combinations(x_3_combinations, 3, True)
+#print("--- Table x^3 WITH security margin ---")
+#print_latex_table_combinations(x_3_combinations, 3, True)
 
 # Without security margin
-print("--- Table x^3 WITHOUT security margin ---")
-print_latex_table_combinations(x_3_combinations, 3, False)
+#print("--- Table x^3 WITHOUT security margin ---")
+#print_latex_table_combinations(x_3_combinations, 3, False)
 
 x_inv_combinations = [
     [1536, 2, 128], [1536, 4, 128], [1536, 6, 128], [1536, 8, 128], [1536, 16, 128],
@@ -137,9 +178,9 @@ x_inv_combinations = [
 ]
 
 # With security margin
-print("--- Table x^(-1) WITH security margin ---")
-print_latex_table_combinations(x_inv_combinations, -1, True)
+#print("--- Table x^(-1) WITH security margin ---")
+#print_latex_table_combinations(x_inv_combinations, -1, True)
 
 # Without security margin
-print("--- Table x^(-1) WITHOUT security margin ---")
-print_latex_table_combinations(x_inv_combinations, -1, False)
+#print("--- Table x^(-1) WITHOUT security margin ---")
+#print_latex_table_combinations(x_inv_combinations, -1, False)
